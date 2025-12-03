@@ -1,0 +1,25 @@
+# Entorno / cachés
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pytest_cache/
+.ipynb_checkpoints/
+
+# Variables locales
+.env
+
+# Datos (no índices ni PDFs reales)
+data/index/
+data/raw/
+data/processed/*.txt
+
+# Visual Studio / IDEs
+.vs/
+*.sqlite
+
+# Sistema
+Thumbs.db
+.DS_Store
+

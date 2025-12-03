@@ -1,0 +1,27 @@
+# Core
+python-dotenv>=1.0.1
+
+# LangChain (APIs modernas y módulos separados)
+langchain>=0.2.16,<0.3
+langchain-community>=0.2.16,<0.3
+langchain-chroma>=0.1.0,<0.2
+langchain-openai>=0.1.7,<0.2
+langchain-text-splitters>=0.2.0,<0.3
+
+# Cliente OpenAI (para RateLimitError y compatibilidad)
+openai>=1.52.0,<2.0
+
+# Vector store
+chromadb>=0.5.3,<0.6
+# (Opcional para limpiar warning y usar clase nueva)
+# langchain-chroma>=0.1.0,<0.2
+
+# PDF loaders
+pypdf>=4.2.0,<5
+pymupdf>=1.24.4,<1.26
+
+# UI
+streamlit>=1.36.0,<1.41
+
+# (Opcional)
+# tiktoken>=0.7.0,<0.8
