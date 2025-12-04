@@ -1,13 +1,31 @@
 # Asistente RAG – Documentación técnica (TFG)
 
-Asistente conversacional basado en **RAG (Retrieval-Augmented Generation)** para consultar documentación técnica/académica en **PDF**, con:
+[![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
+[![LangChain](https://img.shields.io/badge/LangChain-0.2.x-informational)](https://python.langchain.com/)
+[![ChromaDB](https://img.shields.io/badge/VectorDB-Chroma-green)](https://www.trychroma.com/)
+[![Streamlit](https://img.shields.io/badge/UI-Streamlit-red)](https://streamlit.io/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-- Ingesta y **troceado** configurable.
-- **Indexado versionado** (cada reconstrucción crea `data/index/index_YYYYMMDD_HHMMSS`).
-- Recuperación por **similitud** o **MMR** (diversidad de fragmentos).
-- Respuestas **limitadas al corpus** con **citas** (archivo y página).
-- **UI en Streamlit** con subida de PDFs y control de parámetros.
-- **Evaluación reproducible** (CSV de preguntas + métricas).
+Asistente conversacional basado en **RAG** (Retrieval-Augmented Generation) para consultar documentación técnica/académica en **PDF**.  
+Incluye ingesta, indexado **versionado** con Chroma, recuperación por similitud o **MMR**, LLM de OpenAI y **UI en Streamlit** con subida de PDFs.
+
+## Tabla de contenidos
+
+- [Características](#características)
+- [Arquitectura](#arquitectura)
+- [Quickstart](#quickstart)
+- [Instalación](#instalación)
+- [Uso](#uso)
+- [Evaluación](#evaluación)
+- [Configuración (.env)](#configuración-env)
+- [Limitaciones conocidas](#limitaciones-conocidas)
+- [Privacidad](#privacidad)
+- [Buenas prácticas](#buenas-prácticas)
+- [Solución de problemas](#solución-de-problemas)
+- [Capturas](#capturas)
+- [Roadmap](#roadmap)
+- [Licencia](#licencia)
+- [Créditos](#créditos)
 
 ---
 
@@ -37,10 +55,25 @@ Respuesta + Citas a página
 
 ---
 
-## Requisitos
+## Quickstart
 
-- **Python 3.10+** (Windows/macOS/Linux).
-- Cuenta de **OpenAI** con **API key** y crédito activo.
+````bash
+# 1) Entorno y deps
+python -m venv .venv
+# Windows
+.\.venv\Scripts\activate
+# macOS/Linux
+# source .venv/bin/activate
+
+pip install -r requirements.txt
+copy .env.example .env   # (Windows)  # macOS/Linux: cp .env.example .env
+# 👉 Edita .env y pega tu OPENAI_API_KEY
+
+# 2) Coloca PDFs en data/raw/ y construye índice
+python -m app.index
+
+# 3) Lanza la UI
+python -m streamlit run ui/app_streamlit.py
 
 ---
 
@@ -78,7 +111,7 @@ python -m venv .venv
 pip install -r requirements_lock.txt
 copy .env.example .env   & rem añade tu OPENAI_API_KEY
 
-```
+````
 
 ## Uso
 
@@ -118,13 +151,15 @@ DEFAULT_CHAT_MODEL=gpt-4.1-mini
 CHUNK_SIZE=1200
 CHUNK_OVERLAP=200
 
----
+## Limitaciones conocidas
 
-## Capturas
+````markdown
+## Limitaciones conocidas
 
-![UI principal](docs/ui_home.png)
-![Respuesta con citas](docs/ui_answer.png)
-![Subida e indexado](docs/ui_upload.png)
+- **PDFs con tablas complejas / escaneados (OCR)**: el extractor de texto puede perder estructura. (No hay OCR integrado).
+- **Imágenes**: solo se indexa texto; figuras y gráficos no se “leen”.
+- **Dependencia de OpenAI**: requiere cuota activa para embeddings/LLM.
+- **Bloqueo de archivos en Windows**: si Chroma está abierto por la UI, puede fallar el reindexado. Cierra la UI o usa el botón “Reconstruir índice”.
 
 ---
 
@@ -138,18 +173,53 @@ Ajustar chunking según el tipo de documento (tablas, guías largas, etc.).
 
 ---
 
+## Privacidad
+
+- Los PDFs se procesan **localmente**; solo se envían a OpenAI los **chunks de texto** y la **consulta** para embeddings/LLM.
+- Mantén `data/raw/` y `data/index/` **fuera** del control de versiones (están en `.gitignore`).
+
+---
+
 ## Solución de problemas
 
-ModuleNotFoundError → activa el venv y reinstala:
-.\.venv\Scripts\activate
-pip install -r requirements.txt
-429 / quota exceeded → revisa Billing en OpenAI.
+- **ModuleNotFoundError / `streamlit` no se reconoce**  
+   Activa el venv e instala deps:
+  ```bat
+  .\.venv\Scripts\activate
+  pip install -r requirements.txt
+  429 / cuota excedida
+  Revisa billing en OpenAI y el modelo configurado.
+  streamlit no se reconoce → ejecuta con:
+  python -m streamlit run ui/app_streamlit.py
+  ```
 
-WinError 32 al reindexar → cierra la UI (libera data/index/) y vuelve a ejecutar python -m app.index.
-PDFs no aparecen → verifica que están en data/raw/ y pulsa “Reconstruir índice”.
-Texto con caracteres raros → guarda los .py en UTF-8.
-streamlit no se reconoce → ejecuta con:
-python -m streamlit run ui/app_streamlit.py
+WinError 32 al reindexar (archivo en uso)
+Cierra Streamlit y vuelve a ejecutar:
+
+bat
+Copiar código
+python -m app.index
+No aparecen PDFs nuevos
+Verifica que están en data/raw/ y pulsa Reconstruir índice en la UI.
+
+Caracteres raros (mojibake)
+Guarda los .py en UTF-8 y asegúrate de que la consola usa UTF-8.
+
+---
+
+## Capturas
+
+![UI principal](docs/ui_home.png)
+![Respuesta con citas](docs/ui_answer.png)
+![Subida e indexado](docs/ui_upload.png)
+
+---
+
+## Roadmap
+
+- OCR opcional (Tesseract/PyMuPDF-ocr) para PDFs escaneados.
+- Exportar respuestas + citas a PDF/Markdown desde la UI.
+- Soporte para colecciones múltiples de índices (proyectos).
 
 ---
 
@@ -163,3 +233,4 @@ Este proyecto se distribuye bajo licencia MIT. Ver LICENSE
 
 Autor: Cristian (FingFangFung)
 Stack: Python, LangChain, OpenAI, ChromaDB, Streamlit.
+````
