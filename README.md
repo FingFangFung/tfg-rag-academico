@@ -63,7 +63,7 @@ README.md
 
 ---
 
-## 🧩 Instalación
+## Instalación
 
 ### Opción A (normal, recomendada)
 
