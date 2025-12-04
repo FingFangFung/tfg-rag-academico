@@ -183,10 +183,11 @@ Se envían a OpenAI: texto de chunks + consulta para embeddings/LLM.
 
 ![UI principal](docs/ui_home.png)
 
-### Respuesta con citas a página
-
-![Respuesta con citas](docs/ui_answer.png)
 
 ### Subida e indexado de PDFs
 
 ![Subida e indexado](docs/ui_upload.png)
+
+### Respuesta con citas a página
+
+![Respuesta con citas](docs/ui_answer.png)
