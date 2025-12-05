@@ -42,16 +42,11 @@ Incluye ingesta, indexado **versionado** con Chroma, recuperación por similitud
 ## Arquitectura
 
 PDFs (data/raw)
-│
-├─ Ingesta + Split ────────────────┐
-│ │
-└─ Embeddings (OpenAI) → Chroma ←───┘ (índice versionado)
-│
-Recuperación (Sim / MMR)
-│
-Prompt estructurado + LLM
-│
-Respuesta + Citas a página
+   └─ Ingesta + Split
+        ├─ Embeddings (OpenAI) → Chroma  ←─┐
+        │                                 │  (índice versionado)
+        └─ Recuperación (Sim / MMR) ──┬───┘
+                                       └─ Prompt estructurado + LLM → Respuesta + Citas a página
 
 ---
 
@@ -75,8 +70,6 @@ python -m app.index
 # 3) Lanza la UI
 python -m streamlit run ui/app_streamlit.py
 
----
-
 ## Estructura
 
 app/ # config, ingest, index, rag
@@ -93,8 +86,6 @@ requirements.txt
 requirements_lock.txt
 LICENSE
 README.md
-
----
 
 ## Instalación
 
@@ -116,32 +107,26 @@ copy .env.example .env   & rem añade tu OPENAI_API_KEY
 ## Uso
 
 1. Indexar (con PDFs en data/raw/)
-   python -m app.index
-
-Crea data/index/index_YYYYMMDD_HHMMSS.
+  python -m app.index
+   Crea data/index/index_YYYYMMDD_HHMMSS.
 
 2. Lanzar la UI
    python -m streamlit run ui/app_streamlit.py
 
 Sube PDFs desde la propia UI (se guardan en data/raw/).
-
 Ajusta k y temperatura; activa MMR si quieres más diversidad.
-
-Usa Reconstruir índice tras subir/añadir PDFs.
+Pulsa Reconstruir índice tras subir/añadir PDFs.
 
 ## Evaluación
 
 Edita eval/preguntas.csv (id,pregunta).
 
-Ejecuta:
-
-python eval\run_eval.py
-
-→ genera eval/resultados_YYYYMMDD_HHMMSS.csv con respuesta, tiempo y fuentes. 3) Métricas:
-
-python eval\metricas.py
-
-→ muestra % de acierto (exacto/parcial) y tiempo medio (detecta el último CSV).
+1. Ejecuta el runner:
+   python eval\run_eval.py
+Genera eval/resultados_YYYYMMDD_HHMMSS.csv con: respuesta, tiempo_ms, fuentes_json, índice…
+2. Calcula métricas:
+   python eval\metricas.py
+Muestra % de acierto (exacto/parcial) y tiempo medio (detecta el último CSV automáticamente). 
 
 ## Configuración (.env)
 
@@ -182,28 +167,28 @@ Ajustar chunking según el tipo de documento (tablas, guías largas, etc.).
 
 ## Solución de problemas
 
-- **ModuleNotFoundError / `streamlit` no se reconoce**  
-   Activa el venv e instala deps:
-  .\.venv\Scripts\activate
-  pip install -r requirements.txt
-  429 / cuota excedida
+- ModuleNotFoundError / streamlit no se reconoce
+   Activa el venv e instala dependencias:
+      .\.venv\Scripts\activate
+      pip install -r requirements.txt
+
+- 429 / cuota excedida
+   Revisa el Billing de OpenAI y el modelo configurado.
+
+- WinError 32 al reindexar (archivo en uso)
+   Cierra la app de Streamlit (libera data/index/) y vuelve a ejecutar:
+      python -m app.index
+   (También puedes usar el botón Reconstruir índice en la barra lateral.)
+
+- No aparecen PDFs nuevos
+   Verifica que están en data/raw/ y pulsa Reconstruir índice en la UI.
   
-  Revisa billing en OpenAI y el modelo configurado.
-  streamlit no se reconoce → ejecuta con:
-  python -m streamlit run ui/app_streamlit.py
-  
+-Caracteres raros (mojibake)
+   Guarda los .py en UTF-8 y asegúrate de que la consola usa UTF-8.
 
-WinError 32 al reindexar (archivo en uso)
-Cierra Streamlit y vuelve a ejecutar:
-
-bat
-Copiar código
-python -m app.index
-No aparecen PDFs nuevos
-Verifica que están en data/raw/ y pulsa Reconstruir índice en la UI.
-
-Caracteres raros (mojibake)
-Guarda los .py en UTF-8 y asegúrate de que la consola usa UTF-8.
+- streamlit no se reconoce en Windows
+   Lánzalo así (usa el python -m):
+     python -m streamlit run ui/app_streamlit.py
 
 ---
 
