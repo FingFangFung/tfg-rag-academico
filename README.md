@@ -40,15 +40,16 @@ Incluye ingesta, indexado **versionado** con Chroma, recuperación por similitud
 
 ## Arquitectura
 
-  raw["PDFs<br/>(data/raw)"] --> ingest["Ingesta + Split"]
+  flowchart TD
+  raw["PDFs (data/raw)"] --> ingest["Ingesta + Split"]
   ingest --> embed["Embeddings (OpenAI)"]
-  embed --> chroma["Chroma<br/>(índice versionado)"]
+  embed --> chroma["Chroma (índice versionado)"]
 
-  user["Consulta del usuario"] --> retrieve["Recuperación<br/>(Sim / MMR)"]
-  chroma <-- "vectores" --> retrieve
+  user["Consulta del usuario"] --> retrieve["Recuperación (Sim / MMR)"]
+  chroma <-. vectores .-> retrieve
   retrieve --> prompt["Prompt estructurado"]
-  prompt --> llm["LLM<br/>(gpt-4.1-mini)"]
-  llm --> answer["Respuesta + Citas a página"]
+  prompt --> llm["LLM (gpt-4.1-mini)"]
+  llm --> answer["Respuesta + Citas"]
   
 ---
 
