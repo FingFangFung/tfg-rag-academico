@@ -190,7 +190,7 @@ Ajustar chunking según el tipo de documento (tablas, guías largas, etc.).
 - No aparecen PDFs nuevos
    Verifica que están en data/raw/ y pulsa Reconstruir índice en la UI.
   
--Caracteres raros (mojibake)
+- Caracteres raros (mojibake)
    Guarda los .py en UTF-8 y asegúrate de que la consola usa UTF-8.
 
 - streamlit no se reconoce en Windows
