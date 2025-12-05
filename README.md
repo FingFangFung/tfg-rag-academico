@@ -23,7 +23,6 @@ Incluye ingesta, indexado **versionado** con Chroma, recuperación por similitud
 - [Buenas prácticas](#buenas-prácticas)
 - [Solución de problemas](#solución-de-problemas)
 - [Capturas](#capturas)
-- [Roadmap](#roadmap)
 - [Licencia](#licencia)
 - [Créditos](#créditos)
 
@@ -135,9 +134,13 @@ Edita eval/preguntas.csv (id,pregunta).
 ## Configuración (.env)
 
 OPENAI_API_KEY=sk-proj-XXXXXXXXXXXX
+
 DEFAULT_EMBED_MODEL=text-embedding-3-small
+
 DEFAULT_CHAT_MODEL=gpt-4.1-mini
+
 CHUNK_SIZE=1200
+
 CHUNK_OVERLAP=200
 
 ## Limitaciones conocidas
