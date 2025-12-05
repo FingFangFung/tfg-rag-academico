@@ -50,6 +50,7 @@ Incluye ingesta, indexado **versionado** con Chroma, recuperación por similitud
   retrieve --> prompt["Prompt estructurado"]
   prompt --> llm["LLM<br/>(gpt-4.1-mini)"]
   llm --> answer["Respuesta + Citas a página"]
+  
 ---
 
 ## Quickstart
