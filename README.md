@@ -41,9 +41,6 @@ Incluye ingesta, indexado **versionado** con Chroma, recuperación por similitud
 
 ## Arquitectura
 
-### Arquitectura
-
-```mermaid
 flowchart LR
   raw["PDFs<br/>(data/raw)"] --> ingest["Ingesta + Split"]
   ingest --> embed["Embeddings (OpenAI)"]
