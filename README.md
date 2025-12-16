@@ -6,6 +6,9 @@
 [![Streamlit](https://img.shields.io/badge/UI-Streamlit-red)](https://streamlit.io/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
+**🎥 Demo (3–4 min):** https://www.loom.com/share/6500de9531a345489fd9a025ece9b80f  
+**🌐 Demo online:** https://rag.moix.top/
+
 Asistente conversacional basado en **RAG** (Retrieval-Augmented Generation) para consultar documentación técnica/académica en **PDF**.  
 Incluye ingesta, indexado **versionado** con Chroma, recuperación por similitud o **MMR**, LLM de OpenAI y **UI en Streamlit** con subida de PDFs.
 
@@ -51,12 +54,13 @@ Incluye ingesta, indexado **versionado** con Chroma, recuperación por similitud
   retrieve --> prompt["Prompt estructurado"]
   prompt --> llm["LLM (gpt-4.1-mini)"]
   llm --> answer["Respuesta + Citas"]
-  ```
+```
+
 ---
 
 ## Quickstart
 
-````bash
+```bash
 # 1) Entorno y deps
 python -m venv .venv
 # Windows
@@ -90,7 +94,7 @@ requirements.txt
 requirements_lock.txt
 LICENSE
 README.md
-````
+```
 
 ## Instalación
 
@@ -99,20 +103,19 @@ README.md
 python -m venv .venv
 .\.venv\Scripts\activate
 pip install -r requirements.txt
-copy .env.example .env   & rem añade tu OPENAI_API_KEY
+copy .env.example .env & rem añade tu OPENAI_API_KEY
 
 ### Opción B (reproducible 1:1)
 
 python -m venv .venv
 .\.venv\Scripts\activate
 pip install -r requirements_lock.txt
-copy .env.example .env   & rem añade tu OPENAI_API_KEY
-
+copy .env.example .env & rem añade tu OPENAI_API_KEY
 
 ## Uso
 
 1. Indexar (con PDFs en data/raw/)
-  python -m app.index
+   python -m app.index
    Crea data/index/index_YYYYMMDD_HHMMSS.
 
 2. Lanzar la UI
@@ -128,10 +131,10 @@ Edita eval/preguntas.csv (id,pregunta).
 
 1. Ejecuta el runner:
    python eval\run_eval.py
-      Genera eval/resultados_YYYYMMDD_HHMMSS.csv con: respuesta, tiempo_ms, fuentes_json, índice…
+   Genera eval/resultados_YYYYMMDD_HHMMSS.csv con: respuesta, tiempo_ms, fuentes_json, índice…
 2. Calcula métricas:
    python eval\metricas.py
-      Muestra % de acierto (exacto/parcial) y tiempo medio (detecta el último CSV automáticamente). 
+   Muestra % de acierto (exacto/parcial) y tiempo medio (detecta el último CSV automáticamente).
 
 ## Configuración (.env)
 
@@ -147,14 +150,15 @@ CHUNK_OVERLAP=200
 
 ## Limitaciones conocidas
 
-````markdown
+```markdown
 ## Limitaciones conocidas
 
 - **PDFs con tablas complejas / escaneados (OCR)**: el extractor de texto puede perder estructura. (No hay OCR integrado).
 - **Imágenes**: solo se indexa texto; figuras y gráficos no se “leen”.
 - **Dependencia de OpenAI**: requiere cuota activa para embeddings/LLM.
 - **Bloqueo de archivos en Windows**: si Chroma está abierto por la UI, puede fallar el reindexado. Cierra la UI o usa el botón “Reconstruir índice”.
-````
+```
+
 ---
 
 ## Buenas prácticas
@@ -177,27 +181,26 @@ Ajustar chunking según el tipo de documento (tablas, guías largas, etc.).
 ## Solución de problemas
 
 - ModuleNotFoundError / streamlit no se reconoce
-   Activa el venv e instala dependencias:
-      .\.venv\Scripts\activate
-      pip install -r requirements.txt
+  Activa el venv e instala dependencias:
+  .\.venv\Scripts\activate
+  pip install -r requirements.txt
 
 - 429 / cuota excedida
-   Revisa el Billing de OpenAI y el modelo configurado.
+  Revisa el Billing de OpenAI y el modelo configurado.
 
 - WinError 32 al reindexar (archivo en uso)
-   Cierra la app de Streamlit (libera data/index/) y vuelve a ejecutar:
-      python -m app.index
-   (También puedes usar el botón Reconstruir índice en la barra lateral.)
+  Cierra la app de Streamlit (libera data/index/) y vuelve a ejecutar:
+  python -m app.index
+  (También puedes usar el botón Reconstruir índice en la barra lateral.)
 
 - No aparecen PDFs nuevos
-   Verifica que están en data/raw/ y pulsa Reconstruir índice en la UI.
-  
+  Verifica que están en data/raw/ y pulsa Reconstruir índice en la UI.
 - Caracteres raros (mojibake)
-   Guarda los .py en UTF-8 y asegúrate de que la consola usa UTF-8.
+  Guarda los .py en UTF-8 y asegúrate de que la consola usa UTF-8.
 
 - streamlit no se reconoce en Windows
-   Lánzalo así (usa el python -m):
-     python -m streamlit run ui/app_streamlit.py
+  Lánzalo así (usa el python -m):
+  python -m streamlit run ui/app_streamlit.py
 
 ---
 
@@ -219,4 +222,3 @@ Este proyecto se distribuye bajo licencia MIT. Ver LICENSE
 
 Autor: Cristian (FingFangFung)
 Stack: Python, LangChain, OpenAI, ChromaDB, Streamlit.
-
